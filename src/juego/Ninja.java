@@ -26,7 +26,7 @@ public class Ninja {
 
 	
 	public Ninja(double y, double x) {
-		this.alto=30;
+		this.alto=40;
 		this.ancho=20;
 		this.x=x;
 		this.y=y;

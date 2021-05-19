@@ -1,7 +1,5 @@
 package juego;
 
-
-import java.awt.Color;
 import java.util.ArrayList;
 
 import entorno.Entorno;
@@ -15,7 +13,7 @@ public class Juego extends InterfaceJuego
 	// Variables y métodos propios de cada grupo
 	// ...
 	
-	private Sakura sakura= new Sakura(400,300,20,40);
+	private Sakura sakura= new Sakura(300,400,20,40);
 	
 	private Rasengan rasengan;
 	
@@ -27,6 +25,8 @@ public class Juego extends InterfaceJuego
 	
 	private ArrayList<Manzana> manzanas = new ArrayList<>();
 	
+	private int cantidadDeEnemigos= 6;
+	
 	
 	Juego()
 	{
@@ -37,15 +37,12 @@ public class Juego extends InterfaceJuego
 		// ...
 	
 		
-		crearMapa();
+		crearMapa(this.entorno.ancho()+10,this.entorno.alto()+10);
 	
-
-		generarNinja();
-		generarNinja();
-		generarNinja();
-		generarNinja();
-		generarNinja();
-		generarNinja();
+		
+		for(int i = 0; i<cantidadDeEnemigos; i++) {
+			generarNinja();	
+		}
 		
 		
 		// Inicia el juego!
@@ -61,18 +58,9 @@ public class Juego extends InterfaceJuego
 	public void tick()
 	{
 		// Procesamiento de un instante de tiempo
-		// ...
-		
-		sakura.dibujar(entorno);
 		
 		
-		revisarProximoMovimiento();
-		
-		if(rasengan!=null) {
-		rasengan.dibujar(entorno);
-		revisarRasengan();
-		}
-		
+		//Creamos el mapa con las manzanas
 		if(manzanas.size()!=0) {
 			for(Manzana manzana: manzanas) {
 				manzana.dibujar(entorno);
@@ -80,15 +68,33 @@ public class Juego extends InterfaceJuego
 		}
 		
 		
+		//Dibujamos a sakura mientras exista
+		if(sakura!=null) {
+			sakura.dibujar(entorno);
+		}
+		
+		revisarProximoMovimiento();  //del usuario
+		
+		
+		//Dibujamos el Rasengan
+		if(rasengan!=null) {
+			rasengan.dibujar(entorno);
+			revisarRasengan();
+		}
+		
+		//Los ninjas no pueden ser menos que 4
+		while(ninjas.size()<4) {
+			generarNinja();
+		}
+		
+		//Dibujamos todos los ninjas
 		if(ninjas.size()!=0) {
 			for(Ninja ninja: ninjas) {
 				ninja.dibujar(entorno);
 			}
 		}
 		
-		while(ninjas.size()<4) {
-			generarNinja();
-		}
+		
 		
 		
 		
@@ -98,9 +104,19 @@ public class Juego extends InterfaceJuego
 	//------------METODOS----------------------------
 	
 	
+	/**
+	 * Este metodo revisa el proximo movimiento del usuario, en el cual evaluamos:
+	 * Presiona tecla hacia arriba.
+	 * Presiona tecla hacia abajo.
+	 * Presiona tecla hacia la derecha.
+	 * Presiona tecla hacia la izquierda.
+	 * Presiona tecla de espacio para disparar.
+	 */
 	public void revisarProximoMovimiento(){
 		
-		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA) && (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
+		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA) 
+				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)
+				&& (!chocan(sakura,manzanas))) {
 			sakura.avanzarDerecha();
 
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
@@ -109,21 +125,27 @@ public class Juego extends InterfaceJuego
 			}
 			}
 		
-		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA) && (this.sakura.getX() - this.sakura.getAncho() /2 > 0)) {
+		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA) 
+				&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)
+				&& (!chocan(sakura,manzanas))) {
 			sakura.avanzarIzquierda();
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararIzquierda();
 				this.movimientoRasengan = "izquierda";
 			}
 		}
-		if(this.entorno.estaPresionada(this.entorno.TECLA_ABAJO) && (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
+		if(this.entorno.estaPresionada(this.entorno.TECLA_ABAJO) 
+				&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)
+				&& (!chocan(sakura,manzanas))) {
 			sakura.avanzarAbajo();
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararAbajo();
 				this.movimientoRasengan = "abajo";
 			}
 			}
-		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA) && (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
+		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA) 
+				&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)
+				&& (!chocan(sakura,manzanas))) {
 			sakura.avanzarArriba();
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararArriba();
@@ -131,11 +153,13 @@ public class Juego extends InterfaceJuego
 			}
 			}
 		
-		
-		
-
 	}
 	
+	/**
+	 * En este metodo revisamos el movimiento que le corresponde al rasengan.
+	 * Segun el ultimo movimiento al momento de disparar, el rasengan se mueve:
+	 * izquierda, derecha, arriba o abajo.
+	 */
 	
 	public void revisarRasengan() {
 		if((this.movimientoRasengan.equals("derecha"))&&(rasengan.getX()+rasengan.getAncho()/2 <810)) {
@@ -151,57 +175,98 @@ public class Juego extends InterfaceJuego
 			this.rasengan.setY(rasengan.getY()+velocidadRasengan);
 		}
 		else rasengan=null;
-		
 	}
 	
+	
+	/**
+	 * Generamos un ninja aleatorio, verificando que no se encuentre dentro de la lista manzanas.
+	 * Una vez creado nuestro ninja, lo añadimos a nuestra lista ninjas.
+	 *
+	 */
 	
 	public void generarNinja() {
 		boolean choca = true;
 		Ninja nuevo=null;
 		
 		while(choca) {
-			double randomX = Math.floor(Math.random()*(780-0+1)+0);  // Valor random entre 0 y 800, ambos incluidos
-			double randomY = Math.floor(Math.random()*(580-0+1)+0);  // Valor random entre 0 y 600, ambos incluidos
+			double randomX = Math.floor(Math.random()*(780-0+1)+20);  // Valor random entre 20 y 780, ambos incluidos
+			double randomY = Math.floor(Math.random()*(580-0+1)+20);  // Valor random entre 20 y 580, ambos incluidos
 			nuevo = new Ninja(randomY, randomX);
 			
 			choca=false;
 			boolean flag=false;
 			for(int i=0; i< manzanas.size() && flag==false;i++) {
-				if(chocan(nuevo, manzanas.get(i))) {
+				if(chocan(nuevo, manzanas.get(i)) || ! distanciaDeNijasEsCorrecta(nuevo) ) {
 					flag=true;
 					choca=true;
 				}
 			}
 		}
 		ninjas.add(nuevo);
-		
-	
-		
 	}
 	
 	
 	
-	public void crearMapa() {
-		double x = 0;
-		double y = 0;
-		while(x<810) {
-			generarManzanaNueva(x, y);
-			while(y<650) {
-				generarManzanaNueva(x, y);
-				y=y+200;
+	/**
+	 * Este metodo verifica que la distancia entre Ninjas es mayor a 20
+	 * @param nuevoNinja: este sera el ninja que comparemos con nuestra lista "ninjas"
+	 * @return true en caso de que la distancia sea correcta / false en caso de que la distancia no lo sea.
+	 */
+	
+	public boolean distanciaDeNijasEsCorrecta(Ninja nuevoNinja) {
+		if(ninjas.size()!=0) {
+			for(Ninja antiguoNinja: ninjas ) {
+				if(((antiguoNinja.getX()-nuevoNinja.getX()<30) && (antiguoNinja.getX()-nuevoNinja.getX()>-30))
+					||((antiguoNinja.getY()-nuevoNinja.getY()<30)) && (antiguoNinja.getY()-nuevoNinja.getY()>-30)) {
+					return false;
+				}
 			}
-			x=x+200;
-			y = 0;	
+			return true;
 		}
-		
+		else return true;
 	}
 	
+	
+	
+	/**
+	 * Añadimos manzanas a nuestra lista "manzanas" para generar un mapa.
+	 * @param x : nuestro limite x
+	 * @param y : nuestro limite y
+	 */
+	
+	public void crearMapa(int x, int y) {
+		int refX = 0;
+		int refY = 0;
+		while(refX<x) {
+			generarManzanaNueva(refX, refY);
+			while(refY<y) {
+				generarManzanaNueva(refX, refY);
+				refY=refY+200;
+			}
+			refX=refX+200;
+			refY = 0;	
+		}	
+	}
+	
+	
+	/**
+	 * Generamos una nueva manzana donde nos indiquen y la añadimos a nuestra lista "manzanas"
+	 * @param x: punto en x
+	 * @param y: punto en y
+	 */
 	public void generarManzanaNueva(double x, double y) {
 		Manzana nueva= new Manzana(y,x);
 		manzanas.add(nueva);
 	}
 	
 
+	/**
+	 * Revisamos si chocan los argumentos que le pasemos
+	 * @param rec1 : Ninja
+	 * @param rec2 : Manzana
+	 * @return : true en caso de choque / false en caso de no chocar
+	 */
+	
 	public boolean chocan(Ninja rec1, Manzana rec2) {
 		
 		if(rec1!=null && rec2!=null) {
@@ -218,6 +283,31 @@ public class Juego extends InterfaceJuego
 	}
 	
 	
+	/**
+	 * Revisamos si chocan los argumentos que le pasemos
+	 * @param rec1 : Sakura
+	 * @param rec2 : Lista de manzanas
+	 * @return : true en caso de choque / false en caso de no chocar
+	 */
+	
+	public boolean chocan(Sakura rec1, ArrayList<Manzana> manzanas) {
+		
+		for(int i=0; i<manzanas.size();i++) {
+		
+			Manzana rec2 = manzanas.get(i);
+			
+			if(rec1!=null && rec2!=null) {
+				boolean chequeoY = (rec1.getY() - rec1.getAlto()/2 < rec2.getY() + rec2.getAlto()/2) 
+							&& 	   (rec1.getY() + rec1.getAlto()/2 > rec2.getY() - rec2.getAlto()/2) ; 
+		
+				boolean chequeoX = (rec1.getX() - rec1.getAncho()/2 < rec2.getX() + rec2.getAncho()/2) 
+							&& 	   (rec1.getX() + rec1.getAncho()/2 > rec2.getX() - rec2.getAncho()/2) ; 
+		
+				if(chequeoY && chequeoX) return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	
