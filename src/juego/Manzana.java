@@ -1,6 +1,9 @@
 package juego;
 
+import java.awt.Color;
 import java.awt.Image;
+
+import entorno.Entorno;
 
 public class Manzana {
 	
@@ -8,16 +11,30 @@ public class Manzana {
 	private double y;
 	private double ancho;
 	private double alto;
-	private Image imagen;	
+	private Color color;
+	private Image imagen;
 	
-	public Manzana(double y, double x, double ancho, double alto, Image imagen) {
-		this.alto=alto;
-		this.ancho=ancho;
+	
+	public Manzana(double y, double x, Image imagen) {
+		this.alto=150;
+		this.ancho=150;
 		this.x=x;
 		this.y=y;
 		this.imagen=imagen;
-	
+		this.color=color.yellow;
 }
+	public Manzana(double y, double x) {
+		this.alto=150;
+		this.ancho=150;
+		this.x=x;
+		this.y=y;
+		this.color=color.yellow;
+}
+	
+	public void dibujar(Entorno entorno) {
+		entorno.dibujarRectangulo(x, y, ancho, alto, 0,color);
+	}
+	
 
 	public double getX() {
 		return x;
@@ -32,12 +49,21 @@ public class Manzana {
 	public double getY() {
 		return y;
 	}
+	
+	
 
 
 	public void setY(double y) {
 		this.y = y;
 	}
 	
+	public double getAncho() {
+		return this.ancho;
+	}
+	
+	public double getAlto() {
+		return this.alto;
+	}
 
 
 }
