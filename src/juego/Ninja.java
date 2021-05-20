@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Ninja {
 
@@ -11,31 +12,38 @@ public class Ninja {
 	private double y;
 	private double ancho;
 	private double alto;
-	private Image imagen;
+	private Image imagen=Herramientas.cargarImagen("imagenes/Ninja.png");
 	private Color color;
+	private boolean vertical;
+	
 	
 
-	public Ninja(double y, double x, double ancho, double alto, Image imagen) {
+	public Ninja(double y, double x, double ancho, double alto) {
 		this.alto=alto;
 		this.ancho=ancho;
 		this.x=x;
 		this.y=y;
-		this.imagen=imagen;
-	
+		this.vertical=false;	
 }
 
 	
 	public Ninja(double y, double x) {
-		this.alto=40;
-		this.ancho=20;
+		this.alto=50;
+		this.ancho=40;
 		this.x=x;
 		this.y=y;
 		this.color=color.blue;
+		this.vertical=false;
 }
+	
+	public void setVerticalTrue() {
+		this.vertical=true;
+	}
 
 	
+	
 	public void dibujar(Entorno entorno) {
-		entorno.dibujarRectangulo(x, y, ancho, alto, 0, color);
+		entorno.dibujarImagen(imagen, x, y, 0);
 	}
 	
 	public double getAncho() {
@@ -82,6 +90,10 @@ public class Ninja {
 		this.y++;
 	}
 		
+	public Image getImagen() {
+		return imagen;
+	}
+	
 	
 	
 	

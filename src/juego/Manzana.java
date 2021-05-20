@@ -35,6 +35,14 @@ public class Manzana {
 		entorno.dibujarRectangulo(x, y, ancho, alto, 0,color);
 	}
 	
+	public double getBordeIzquierdo() {
+		return this.x - (this.ancho/2);
+	}
+	
+	public double getBordeDerecho() {
+		return this.x + (this.ancho/2);
+	}
+	
 
 	public double getX() {
 		return x;

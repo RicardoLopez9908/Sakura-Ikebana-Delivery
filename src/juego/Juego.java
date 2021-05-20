@@ -1,8 +1,10 @@
 package juego;
 
+import java.awt.Image;
 import java.util.ArrayList;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 import entorno.InterfaceJuego;
 
 public class Juego extends InterfaceJuego
@@ -13,7 +15,7 @@ public class Juego extends InterfaceJuego
 	// Variables y métodos propios de cada grupo
 	// ...
 	
-	private Sakura sakura= new Sakura(300,400,20,40);
+	private Sakura sakura= new Sakura(300,400,50,50);
 	
 	private Rasengan rasengan;
 	
@@ -26,6 +28,8 @@ public class Juego extends InterfaceJuego
 	private ArrayList<Manzana> manzanas = new ArrayList<>();
 	
 	private int cantidadDeEnemigos= 6;
+	
+	private Image fondo=Herramientas.cargarImagen("imagenes/Fondo.png");
 	
 	
 	Juego()
@@ -57,7 +61,11 @@ public class Juego extends InterfaceJuego
 	 */
 	public void tick()
 	{
+		
+		
 		// Procesamiento de un instante de tiempo
+		
+		entorno.dibujarImagen(fondo, 405, 300, 0);
 		
 		
 		//Creamos el mapa con las manzanas
@@ -115,9 +123,11 @@ public class Juego extends InterfaceJuego
 	public void revisarProximoMovimiento(){
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA) 
-				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)
-				&& (!chocan(sakura,manzanas))) {
+				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
 			sakura.avanzarDerecha();
+			if(chocan(sakura,manzanas)){
+				sakura.avanzarIzquierda();
+			}
 
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararDerecha();
@@ -126,27 +136,40 @@ public class Juego extends InterfaceJuego
 			}
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA) 
-				&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)
-				&& (!chocan(sakura,manzanas))) {
+				&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)){
 			sakura.avanzarIzquierda();
+			
+			if(chocan(sakura,manzanas)){
+				sakura.avanzarDerecha();
+			}
+
+			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararIzquierda();
 				this.movimientoRasengan = "izquierda";
 			}
 		}
 		if(this.entorno.estaPresionada(this.entorno.TECLA_ABAJO) 
-				&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)
-				&& (!chocan(sakura,manzanas))) {
+				&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
 			sakura.avanzarAbajo();
+			if(chocan(sakura,manzanas)){
+				sakura.avanzarArriba();
+			}
+
+			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararAbajo();
 				this.movimientoRasengan = "abajo";
 			}
 			}
 		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA) 
-				&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)
-				&& (!chocan(sakura,manzanas))) {
+				&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
 			sakura.avanzarArriba();
+			if(chocan(sakura,manzanas)){
+				sakura.avanzarAbajo();
+			}
+
+			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararArriba();
 				this.movimientoRasengan = "arriba";
@@ -160,7 +183,6 @@ public class Juego extends InterfaceJuego
 	 * Segun el ultimo movimiento al momento de disparar, el rasengan se mueve:
 	 * izquierda, derecha, arriba o abajo.
 	 */
-	
 	public void revisarRasengan() {
 		if((this.movimientoRasengan.equals("derecha"))&&(rasengan.getX()+rasengan.getAncho()/2 <810)) {
 			this.rasengan.setX(rasengan.getX()+velocidadRasengan);
@@ -183,13 +205,12 @@ public class Juego extends InterfaceJuego
 	 * Una vez creado nuestro ninja, lo añadimos a nuestra lista ninjas.
 	 *
 	 */
-	
 	public void generarNinja() {
 		boolean choca = true;
 		Ninja nuevo=null;
 		
 		while(choca) {
-			double randomX = Math.floor(Math.random()*(780-0+1)+20);  // Valor random entre 20 y 780, ambos incluidos
+			double randomX = Math.floor(Math.random()*(780-200+1)+20);  // Valor random entre 20 y 780, ambos incluidos
 			double randomY = Math.floor(Math.random()*(580-0+1)+20);  // Valor random entre 20 y 580, ambos incluidos
 			nuevo = new Ninja(randomY, randomX);
 			
@@ -202,9 +223,10 @@ public class Juego extends InterfaceJuego
 				}
 			}
 		}
+		
+		
 		ninjas.add(nuevo);
 	}
-	
 	
 	
 	/**
@@ -289,7 +311,6 @@ public class Juego extends InterfaceJuego
 	 * @param rec2 : Lista de manzanas
 	 * @return : true en caso de choque / false en caso de no chocar
 	 */
-	
 	public boolean chocan(Sakura rec1, ArrayList<Manzana> manzanas) {
 		
 		for(int i=0; i<manzanas.size();i++) {
@@ -303,8 +324,7 @@ public class Juego extends InterfaceJuego
 				boolean chequeoX = (rec1.getX() - rec1.getAncho()/2 < rec2.getX() + rec2.getAncho()/2) 
 							&& 	   (rec1.getX() + rec1.getAncho()/2 > rec2.getX() - rec2.getAncho()/2) ; 
 		
-				if(chequeoY && chequeoX) return true;
-			}
+				if(chequeoY && chequeoX) return true;}
 		}
 		return false;
 	}
