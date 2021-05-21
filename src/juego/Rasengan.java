@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Rasengan {
 
@@ -11,7 +12,7 @@ public class Rasengan {
 	private double y;
 	private double ancho;
 	private double alto;
-	private Image imagen;
+	private Image imagen=Herramientas.cargarImagen("imagenes/Rasengan.png");
 	
 	
 	public Rasengan(double y, double x, double ancho, double alto, Image imagen) {
@@ -33,7 +34,7 @@ public class Rasengan {
 
 
 	public void dibujar(Entorno entorno) {
-		entorno.dibujarRectangulo(this.x,this.y, this.ancho, this.alto, 0, Color.BLUE);		
+		entorno.dibujarImagen(imagen, x, y, 0);
 	}
 	
 	

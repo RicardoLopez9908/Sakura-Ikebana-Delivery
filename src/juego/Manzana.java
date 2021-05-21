@@ -21,14 +21,14 @@ public class Manzana {
 		this.x=x;
 		this.y=y;
 		this.imagen=imagen;
-		this.color=color.yellow;
+		this.color=color.green;
 }
 	public Manzana(double y, double x) {
 		this.alto=150;
 		this.ancho=150;
 		this.x=x;
 		this.y=y;
-		this.color=color.yellow;
+		this.color=color.green;
 }
 	
 	public void dibujar(Entorno entorno) {

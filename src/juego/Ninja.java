@@ -13,38 +13,93 @@ public class Ninja {
 	private double ancho;
 	private double alto;
 	private Image imagen=Herramientas.cargarImagen("imagenes/Ninja.png");
-	private Color color;
-	private boolean vertical;
+	private int lugar;
+	private String movimiento;
 	
-	
-
-	public Ninja(double y, double x, double ancho, double alto) {
-		this.alto=alto;
-		this.ancho=ancho;
-		this.x=x;
-		this.y=y;
-		this.vertical=false;	
-}
-
-	
-	public Ninja(double y, double x) {
+		
+	public Ninja(int lugar) {
 		this.alto=50;
 		this.ancho=40;
-		this.x=x;
-		this.y=y;
-		this.color=color.blue;
-		this.vertical=false;
+		switch(lugar) {
+		case 1:
+			this.x=100;
+			this.y=100;
+			this.movimiento="abajo";
+			break;
+		case 2:
+			this.x=600;
+			this.y=100;
+			this.movimiento="izquierda";
+			break;
+		case 3:
+			this.x=100;
+			this.y=500;
+			this.movimiento="derecha";
+			break;
+		case 4:
+			this.x=700;
+			this.y=500;
+			this.movimiento="abajo";
+			break;
+		case 5:
+			this.x=300;
+			this.y=300;
+			this.movimiento="abajo";
+			break;
+		case 6:
+			this.x=500;
+			this.y=450;
+			this.movimiento="arriba";
+			break;
+			
+		}
 }
 	
-	public void setVerticalTrue() {
-		this.vertical=true;
+	
+	
+	public String getMovimiento() {
+		return this.movimiento;
 	}
-
 	
 	
 	public void dibujar(Entorno entorno) {
 		entorno.dibujarImagen(imagen, x, y, 0);
 	}
+	
+	public void mover() {
+		switch(this.movimiento) {
+		case "arriba":
+			this.y--;
+			break;
+		case "abajo":
+			this.y++;
+			break;
+		case "derecha":
+			this.x++;
+			break;
+		case "izquierda":
+			this.x--;
+			break;
+		}
+	}
+	
+	
+	public void teletransportarInicioY() {
+		this.y=0;
+	}
+	
+	public void teletransportarInicioX() {
+		this.x=0;
+	}
+	
+	public void teletransportarFinY() {
+		this.y=600;
+	}
+	
+	public void teletransportarFinX() {
+		this.x=810;
+	}
+	
 	
 	public double getAncho() {
 		return this.ancho;
@@ -74,22 +129,7 @@ public class Ninja {
 		this.y = y;
 	}
 	
-	public void avanzarIzquierda() {
-		this.x--;
-	}
 	
-	public void avanzarDerecha() {
-		this.x++;
-	}
-	
-	public void avanzarArriba() {
-		this.y--;
-	}
-	
-	public void avanzarAbajo() {
-		this.y++;
-	}
-		
 	public Image getImagen() {
 		return imagen;
 	}
