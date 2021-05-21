@@ -10,11 +10,13 @@ import entorno.InterfaceJuego;
 
 public class Juego extends InterfaceJuego
 {
-	// El objeto Entorno que controla el tiempo y otros
-	private Entorno entorno;
 	
-	// Variables y métodos propios de cada grupo
-	// ...
+	//ENEMIGOS ---------------------------------
+	
+	private ArrayList<Ninja> ninjas=new ArrayList<>();
+	
+	
+	//PERSONAJES Y HABILIDADES ------------------
 	
 	private Sakura sakura= new Sakura(300,400);
 	
@@ -24,17 +26,22 @@ public class Juego extends InterfaceJuego
 	
 	private int velocidadRasengan = 2;
 	
-	private ArrayList<Ninja> ninjas=new ArrayList<>();
+	
+	//CONFIGURACION DEL JUEGO --------------------
+	
+	private Entorno entorno;
 	
 	private ArrayList<Manzana> manzanas = new ArrayList<>();
 	
+	private int cantidadMinimaDeNinjas = 4;
+	
+	private boolean gameOver=false;
+
 	private int cantidadDeEnemigos= 6;
 	
 	private Image fondo=Herramientas.cargarImagen("imagenes/Fondo.png");
 	
-	private boolean gameOver=false;
 	
-	private int cantidadMinimaDeNinjas = 4;
 	
 	
 	Juego()
@@ -42,9 +49,6 @@ public class Juego extends InterfaceJuego
 		// Inicializa el objeto entorno
 		this.entorno = new Entorno(this, "Sakura Ikebana Delivery - Grupo XX - v1", 800, 600);
 		
-		// Inicializar lo que haga falta para el juego
-		// ...
-	
 		
 		crearMapa(this.entorno.ancho()+10,this.entorno.alto()+10);
 	
@@ -52,8 +56,6 @@ public class Juego extends InterfaceJuego
 		for(int i=1; i<=cantidadDeEnemigos;i++) {
 				ninjas.add(new Ninja(i));
 		}
-	
-		
 		
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -66,14 +68,16 @@ public class Juego extends InterfaceJuego
 	 * (ver el enunciado del TP para mayor detalle).
 	 */
 	public void tick(){
-		
-		
-	if(gameOver==false){
-		
 		// Procesamiento de un instante de tiempo
+			
+		
+	if(gameOver==true){		
+		entorno.cambiarFont("Times New Roman", 50, Color.RED);
+		entorno.escribirTexto("¡PERDISTE!", 290, 250);
+	
+	}else {
 		
 		entorno.dibujarImagen(fondo, 405, 300, 0);
-		
 		
 		//Creamos el mapa con las manzanas
 		if(manzanas.size()!=0) {
@@ -82,19 +86,9 @@ public class Juego extends InterfaceJuego
 			}
 		}
 		
-		//Dibujamos todos los ninjas
+		sakura.dibujar(entorno);
 		
-		for(Ninja ninja:ninjas) {
-			ninja.dibujar(entorno);
-		}
-		
-		
-		//Dibujamos a sakura mientras exista
-		if(sakura!=null) {
-			sakura.dibujar(entorno);
-		}
-		
-		revisarProximoMovimiento();  //del usuario
+		revisarProximoMovimientoDelUsuario(); 
 		
 		
 		//Dibujamos el Rasengan
@@ -102,9 +96,6 @@ public class Juego extends InterfaceJuego
 			rasengan.dibujar(entorno);
 			revisarRasengan();
 		}
-		
-		
-		
 		
 		//Dibujamos todos los ninjas
 		if(ninjas.size()!=0) {
@@ -131,24 +122,11 @@ public class Juego extends InterfaceJuego
 			
 		}
 		
-		
-		
 		}
-		
-		
-	else {
-		entorno.cambiarFont("Times New Roman", 50, Color.RED);
-		entorno.escribirTexto("¡PERDISTE!", 290, 250);
-	}
 			
 	}
 	
-	
-	//------------METODOS----------------------------
-	
-	
-	
-	
+	//------------------------------------[METODOS]------------------------------------------//
 	
 	
 	/**
@@ -159,118 +137,92 @@ public class Juego extends InterfaceJuego
 	 * Presiona tecla hacia la izquierda.
 	 * Presiona tecla de espacio para disparar.
 	 */
-	public void revisarProximoMovimiento(){
+	public void revisarProximoMovimientoDelUsuario(){
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_DERECHA) 
-				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
+			&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
 			sakura.avanzarDerecha();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarIzquierda();
-			}
+			if(chocan(sakura,manzanas))	sakura.avanzarIzquierda();
+			
 
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararDerecha();
-				this.movimientoRasengan = "derecha";
-			}
+				this.movimientoRasengan = "derecha";}
 			}
 		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_IZQUIERDA) 
-				&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)){
+			&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)){
 			sakura.avanzarIzquierda();
 			
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarDerecha();
-			}
-
+			if(chocan(sakura,manzanas))	sakura.avanzarDerecha();
 			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararIzquierda();
-				this.movimientoRasengan = "izquierda";
+				this.movimientoRasengan = "izquierda";}
 			}
-		}
+		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_ABAJO) 
-				&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
+			&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
 			sakura.avanzarAbajo();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarArriba();
-			}
-
+			if(chocan(sakura,manzanas))	sakura.avanzarArriba();
 			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararAbajo();
-				this.movimientoRasengan = "abajo";
+				this.movimientoRasengan = "abajo";}
 			}
-			}
+		
 		if(this.entorno.estaPresionada(this.entorno.TECLA_ARRIBA) 
-				&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
+			&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
 			sakura.avanzarArriba();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarAbajo();
-			}
+			if(chocan(sakura,manzanas))	sakura.avanzarAbajo();
 
-			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararArriba();
-				this.movimientoRasengan = "arriba";
-			}
+				this.movimientoRasengan = "arriba";}
 			}
 		//--------------------------------/A/W/S/D/--------------------------------------------------
 		
 		if(this.entorno.estaPresionada('d') 
-				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
+			&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {
 			sakura.avanzarDerecha();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarIzquierda();
-			}
+			if(chocan(sakura,manzanas))	sakura.avanzarIzquierda();
+			
 
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararDerecha();
-				this.movimientoRasengan = "derecha";
-			}
+				this.movimientoRasengan = "derecha";}
 			}
 		
 		if(this.entorno.estaPresionada('a') 
-				&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)){
+			&& (this.sakura.getX() - this.sakura.getAncho() /2 > 0)){
 			sakura.avanzarIzquierda();
 			
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarDerecha();
-			}
-
+			if(chocan(sakura,manzanas))	sakura.avanzarDerecha();
 			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararIzquierda();
-				this.movimientoRasengan = "izquierda";
-			}
+				this.movimientoRasengan = "izquierda";}
 		}
 		if(this.entorno.estaPresionada('s') 
-				&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
+			&& (this.sakura.getY() + this.sakura.getAlto()/2 < 595)) {
 			sakura.avanzarAbajo();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarArriba();
-			}
-
 			
+			if(chocan(sakura,manzanas))	sakura.avanzarArriba();
+		
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararAbajo();
-				this.movimientoRasengan = "abajo";
-			}
+				this.movimientoRasengan = "abajo";}
 			}
 		if(this.entorno.estaPresionada('W') 
-				&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
+			&& (this.sakura.getY() - this.sakura.getAlto() /2 > 0)) {
 			sakura.avanzarArriba();
-			if(chocan(sakura,manzanas)){
-				sakura.avanzarAbajo();
-			}
-
+			
+			if(chocan(sakura,manzanas))	sakura.avanzarAbajo();
 			
 			if(this.entorno.estaPresionada(this.entorno.TECLA_ESPACIO)&& rasengan==null){
 				rasengan=sakura.dispararArriba();
-				this.movimientoRasengan = "arriba";
+				this.movimientoRasengan = "arriba";}
 			}
-			}
-		
-		
 	}
 	
 	
