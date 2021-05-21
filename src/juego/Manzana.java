@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Manzana {
 	
@@ -11,28 +12,22 @@ public class Manzana {
 	private double y;
 	private double ancho;
 	private double alto;
-	private Color color;
 	private Image imagen;
 	
-	
-	public Manzana(double y, double x, Image imagen) {
-		this.alto=150;
+
+	public Manzana(double y, double x,int estilo) {
+		this.alto=100;
 		this.ancho=150;
 		this.x=x;
 		this.y=y;
-		this.imagen=imagen;
-		this.color=color.green;
-}
-	public Manzana(double y, double x) {
-		this.alto=150;
-		this.ancho=150;
-		this.x=x;
-		this.y=y;
-		this.color=color.green;
+		if(estilo%2==0) {
+			this.imagen=Herramientas.cargarImagen("imagenes/Manzana2.png");
+		}
+		else this.imagen=Herramientas.cargarImagen("imagenes/Manzana1.png");
 }
 	
 	public void dibujar(Entorno entorno) {
-		entorno.dibujarRectangulo(x, y, ancho, alto, 0,color);
+		entorno.dibujarImagen(imagen, x, y, 0);
 	}
 	
 	public double getBordeIzquierdo() {

@@ -35,13 +35,13 @@ public class Juego extends InterfaceJuego
 	
 	private int cantidadMinimaDeNinjas = 4;
 	
+	private int cantidadDeNinjas= 6;
+	
 	private boolean gameOver=false;
 
-	private int cantidadDeEnemigos= 6;
-	
 	private Image fondo=Herramientas.cargarImagen("imagenes/Fondo.png");
 	
-	
+	private int ultimoNinjaEliminado;
 	
 	
 	Juego()
@@ -53,7 +53,7 @@ public class Juego extends InterfaceJuego
 		crearMapa(this.entorno.ancho()+10,this.entorno.alto()+10);
 	
 		
-		for(int i=1; i<=cantidadDeEnemigos;i++) {
+		for(int i=1; i<=cantidadDeNinjas;i++) {
 				ninjas.add(new Ninja(i));
 		}
 		
@@ -108,6 +108,7 @@ public class Juego extends InterfaceJuego
 					gameOver=true;
 				}		
 				if(chocan(rasengan,ninjas.get(i))) {
+					ultimoNinjaEliminado=i+1;
 					ninjas.remove(i);
 					rasengan=null;
 				}	
@@ -117,8 +118,7 @@ public class Juego extends InterfaceJuego
 		//revisamos que hayan cierta cantidad de ninjas vivos
 		
 		if(ninjas.size()<cantidadMinimaDeNinjas) {
-			double random = Math.floor(Math.random()*(cantidadMinimaDeNinjas+1)+1);  // Valor random entre 1 y cantidadMinimaDeNinjas, ambos incluidos
-			ninjas.add(new Ninja((int)random));
+			ninjas.add(new Ninja(ultimoNinjaEliminado));
 			
 		}
 		
@@ -309,14 +309,16 @@ public class Juego extends InterfaceJuego
 	 */
 	
 	public void crearMapa(int x, int y) {
-		int refX = 0;
+		int refX = 100;
 		int refY = 0;
+		int contador=0;
 		while(refX<x) {
-			generarManzanaNueva(refX, refY);
+			generarManzanaNueva(refX, refY,contador);
 			while(refY<y) {
-				generarManzanaNueva(refX, refY);
-				refY=refY+200;
+				generarManzanaNueva(refX, refY,contador++);
+				refY=refY+150;
 			}
+			contador--;
 			refX=refX+200;
 			refY = 0;	
 		}	
@@ -328,8 +330,8 @@ public class Juego extends InterfaceJuego
 	 * @param x: punto en x
 	 * @param y: punto en y
 	 */
-	public void generarManzanaNueva(double x, double y) {
-		Manzana nueva= new Manzana(y,x);
+	public void generarManzanaNueva(double x, double y, int contador) {
+		Manzana nueva= new Manzana(y,x, contador);
 		manzanas.add(nueva);
 	}
 	
