@@ -16,7 +16,7 @@ public class Juego extends InterfaceJuego
 	// Variables y métodos propios de cada grupo
 	// ...
 	
-	private Sakura sakura= new Sakura(300,400,50,50);
+	private Sakura sakura= new Sakura(300,400);
 	
 	private Rasengan rasengan;
 	
@@ -33,6 +33,8 @@ public class Juego extends InterfaceJuego
 	private Image fondo=Herramientas.cargarImagen("imagenes/Fondo.png");
 	
 	private boolean gameOver=false;
+	
+	private int cantidadMinimaDeNinjas = 4;
 	
 	
 	Juego()
@@ -101,10 +103,8 @@ public class Juego extends InterfaceJuego
 			revisarRasengan();
 		}
 		
-		//Los ninjas no pueden ser menos que 4
-		while(ninjas.size()<4) {
-		//	generarNinja();
-		}
+		
+		
 		
 		//Dibujamos todos los ninjas
 		if(ninjas.size()!=0) {
@@ -118,15 +118,24 @@ public class Juego extends InterfaceJuego
 				}		
 				if(chocan(rasengan,ninjas.get(i))) {
 					ninjas.remove(i);
-				}
+					rasengan=null;
+				}	
 			}
+			}
+		
+		//revisamos que hayan cierta cantidad de ninjas vivos
+		
+		if(ninjas.size()<cantidadMinimaDeNinjas) {
+			double random = Math.floor(Math.random()*(cantidadMinimaDeNinjas+1)+1);  // Valor random entre 1 y cantidadMinimaDeNinjas, ambos incluidos
+			ninjas.add(new Ninja((int)random));
+			
 		}
 		
 		
 		
+		}
 		
 		
-	}
 	else {
 		entorno.cambiarFont("Times New Roman", 50, Color.RED);
 		entorno.escribirTexto("¡PERDISTE!", 290, 250);
@@ -205,7 +214,7 @@ public class Juego extends InterfaceJuego
 				this.movimientoRasengan = "arriba";
 			}
 			}
-		//-----------------------------------------------------------------------------
+		//--------------------------------/A/W/S/D/--------------------------------------------------
 		
 		if(this.entorno.estaPresionada('d') 
 				&& (this.sakura.getX() + this.sakura.getAncho() /2 < 810)) {

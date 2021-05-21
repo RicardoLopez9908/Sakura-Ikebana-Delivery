@@ -1,6 +1,5 @@
 package juego;
 
-import java.awt.Color;
 import java.awt.Image;
 
 import entorno.Entorno;
@@ -14,19 +13,10 @@ public class Sakura {
 	private double alto;
 	private Image imagen= Herramientas.cargarImagen("imagenes/Sakura.png");
 	
-	
-	public Sakura(double y, double x, double ancho, double alto, Image imagen) {
-		this.alto=alto;
-		this.ancho=ancho;
-		this.x=x;
-		this.y=y;
-		this.imagen=imagen;
-		
-	}
 
-	public Sakura(double y, double x, double ancho, double alto) {
-		this.alto=alto;
-		this.ancho=ancho;
+	public Sakura(double y, double x) {
+		this.alto=43;
+		this.ancho=30;
 		this.x=x;
 		this.y=y;
 		

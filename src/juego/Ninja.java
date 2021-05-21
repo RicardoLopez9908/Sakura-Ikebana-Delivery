@@ -13,13 +13,12 @@ public class Ninja {
 	private double ancho;
 	private double alto;
 	private Image imagen=Herramientas.cargarImagen("imagenes/Ninja.png");
-	private int lugar;
 	private String movimiento;
 	
 		
 	public Ninja(int lugar) {
-		this.alto=50;
-		this.ancho=40;
+		this.alto=25;
+		this.ancho=20;
 		switch(lugar) {
 		case 1:
 			this.x=100;
