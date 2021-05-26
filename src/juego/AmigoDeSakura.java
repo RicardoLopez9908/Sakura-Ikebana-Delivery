@@ -5,19 +5,19 @@ import java.awt.Image;
 import entorno.Entorno;
 import entorno.Herramientas;
 
-public class Sakura {
-	
+public class AmigoDeSakura {
+
+
 	private double x;
 	private double y;
 	private double ancho;
 	private double alto;
-	private Image imagen= Herramientas.cargarImagen("imagenes/Sakura.png");
+	private Image imagen= Herramientas.cargarImagen("imagenes/AmigoDeSakura.png");
 	private Ikebana ramoDeRosas;
 	private int velocidad;
 	
-	
 
-	public Sakura(double y, double x) {
+	public AmigoDeSakura(double y, double x) {
 		this.alto=43;
 		this.ancho=30;
 		this.x=x;
@@ -87,9 +87,6 @@ public class Sakura {
 		this.y = y;
 	}
 	
-	
-	
-	
 	public void avanzarIzquierda() {
 		this.x= x-velocidad;
 		if(ramoDeRosas!=null) {
@@ -121,5 +118,7 @@ public class Sakura {
 	public Ikebana getIkebana() {
 		return ramoDeRosas;
 	}
+	
+
 	
 }

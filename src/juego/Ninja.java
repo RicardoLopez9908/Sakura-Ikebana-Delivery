@@ -20,32 +20,32 @@ public class Ninja {
 		this.alto=25;
 		this.ancho=20;
 		switch(lugar) {
-		case 1:
+		case 0:
 			this.x=200;
 			this.y=100;
 			this.movimiento="abajo";
 			break;
-		case 2:
+		case 1:
 			this.x=600;
 			this.y=75;
 			this.movimiento="izquierda";
 			break;
-		case 3:
+		case 2:
 			this.x=100;
 			this.y=525;
 			this.movimiento="derecha";
 			break;
-		case 4:
+		case 3:
 			this.x=600;
 			this.y=500;
 			this.movimiento="abajo";
 			break;
-		case 5:
+		case 4:
 			this.x=300;
 			this.y=225;
 			this.movimiento="derecha";
 			break;
-		case 6:
+		case 5:
 			this.x=500;
 			this.y=375;
 			this.movimiento="izquierda";

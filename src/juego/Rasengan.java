@@ -12,23 +12,15 @@ public class Rasengan {
 	private double y;
 	private double ancho;
 	private double alto;
-	private Image imagen=Herramientas.cargarImagen("imagenes/Rasengan.png");
+	private Image imagen;
 	
-	
-	public Rasengan(double y, double x, double ancho, double alto, Image imagen) {
-		this.alto=alto;
-		this.ancho=ancho;
-		this.x=x;
-		this.y=y;
-		this.imagen=imagen;
-		
-	}
 
-	public Rasengan(double y, double x, double ancho, double alto) {
-		this.alto=alto;
-		this.ancho=ancho;
+	public Rasengan(double y, double x, Image imagen) {
+		this.alto=10;
+		this.ancho=10;
 		this.x=x;
 		this.y=y;
+		this.imagen = imagen;
 		
 	}
 
