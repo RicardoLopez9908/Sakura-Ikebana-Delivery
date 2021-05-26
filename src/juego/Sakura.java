@@ -12,6 +12,9 @@ public class Sakura {
 	private double ancho;
 	private double alto;
 	private Image imagen= Herramientas.cargarImagen("imagenes/Sakura.png");
+	private Ikebana ramoDeRosas;
+	private int velocidad;
+	
 	
 
 	public Sakura(double y, double x) {
@@ -19,14 +22,40 @@ public class Sakura {
 		this.ancho=30;
 		this.x=x;
 		this.y=y;
-		
+		this.velocidad=1;
 	}
 
+	public void setVelocidad(int velocidad) {
+		this.velocidad=velocidad;
+	}
+	
+	public int getVelocidad() {
+		return this.velocidad;
+	}
+	
+	
+	public void sostenerRamo() {
+		this.ramoDeRosas = new Ikebana(this.x-7, this.y+12);
+	}
+	
+	public void entregarRamo() {
+		this.ramoDeRosas = null;
+	}
+	
+	public boolean tieneRamo() {
+		if(ramoDeRosas!=null) {
+			return true;
+		}
+		else return false;
+	}
+	
 
 	public void dibujar(Entorno entorno) {
 		entorno.dibujarImagen(imagen, x, y, 0);
+		if(ramoDeRosas!=null) {
+			ramoDeRosas.dibujar(entorno);
+		}
 	}
-	
 	
 	public void setImagen(Image imagen) {
 		this.imagen=imagen;
@@ -76,23 +105,36 @@ public class Sakura {
 	}
 	
 	
-	
-	
-	
 	public void avanzarIzquierda() {
-		this.x--;
+		this.x= x-velocidad;
+		if(ramoDeRosas!=null) {
+			ramoDeRosas.setX(ramoDeRosas.getX()-velocidad);
+		}
 	}
 	
 	public void avanzarDerecha() {
-		this.x++;
+		this.x= x+velocidad;
+		if(ramoDeRosas!=null) {
+			ramoDeRosas.setX(ramoDeRosas.getX()+velocidad);
+		}
 	}
 	
 	public void avanzarArriba() {
-		this.y--;
+		this.y=y-velocidad;
+		if(ramoDeRosas!=null) {
+			ramoDeRosas.setY(ramoDeRosas.getY()-velocidad);
+		}
 	}
 	
 	public void avanzarAbajo() {
-		this.y++;
+		this.y=y+velocidad;
+		if(ramoDeRosas!=null) {
+			ramoDeRosas.setY(ramoDeRosas.getY()+velocidad);
+		}
+	}
+	
+	public Ikebana getIkebana() {
+		return ramoDeRosas;
 	}
 	
 }
