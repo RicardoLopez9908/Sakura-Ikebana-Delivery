@@ -57,6 +57,8 @@ public class Juego extends InterfaceJuego
 	
 	private int tiempo=0;
 	
+	private String resultadoJuego = "Ganaste !!";
+	
 	Juego()
 	{
 		// Inicializa el objeto entorno
@@ -82,14 +84,22 @@ public class Juego extends InterfaceJuego
 	 */
 	public void tick(){
 		// Procesamiento de un instante de tiempo
-			
+				
 		
 	if(gameOver==true){		
 		entorno.cambiarFont("Times New Roman", 50, Color.RED);
-		entorno.escribirTexto("¡PERDISTE!", 290, 250);
-	
+		entorno.escribirTexto(resultadoJuego, 290, 250);
+		entorno.cambiarFont("Times New Roman", 25, Color.white);
+		entorno.escribirTexto("Puntaje del Juego", 290, 300);
+		entorno.cambiarFont("Times New Roman", 25, Color.white);
+		entorno.escribirTexto("" + puntaje  , 290, 340);
+
 	}else {
-		
+		if (puntaje > 5 ) {
+			resultadoJuego = "Ganaste"  ;
+			
+			gameOver= true;
+		}
 		entorno.dibujarImagen(fondo, 405, 300, 0);
 		
 		//Creamos el mapa con las manzanas
@@ -143,6 +153,7 @@ public class Juego extends InterfaceJuego
 				revisarMovimiento(ninjas.get(i));
 				if(chocan(sakura, ninjas.get(i))) {
 					sakura=null;
+					resultadoJuego = "Perdiste";
 					gameOver=true;
 				}		
 				if(chocan(rasengan,ninjas.get(i))) {
@@ -156,13 +167,17 @@ public class Juego extends InterfaceJuego
 		
 		//revisamos que hayan cierta cantidad de ninjas vivos
 		
-		if(ninjas.size()<cantidadMinimaDeNinjas) {
-			ninjas.add(new Ninja(ultimoNinjaEliminado));	
+		if(ninjas.size() < cantidadMinimaDeNinjas && tiempo > 1000 ) {
+			Ninja ninjaNuevo = new Ninja(ultimoNinjaEliminado);
+			if (!estaCerca(ninjaNuevo, sakura)){
+				ninjas.add(ninjaNuevo);
+				tiempo = 0;
+ 			}
 		}
-		
+			tiempo++;
 		}
-			
 	}
+	
 	
 	//------------------------------------[METODOS]------------------------------------------//
 	
@@ -467,6 +482,22 @@ public boolean chocan(Sakura rec1, Point rec2) {
 			
 		else return false;
 	}
+	
+	public boolean estaCerca(Ninja rec1, Sakura rec2) {
+		
+		if(rec1!=null && rec2!=null) {
+			boolean chequeoY = (rec1.getY() - rec1.getAlto()/2 < rec2.getY() + ( rec2.getAlto()/2 ) + 100) 
+						&& 	   (rec1.getY() + rec1.getAlto()/2 > rec2.getY() - ( rec2.getAlto()/2 ) + 100) ; 
+		
+			boolean chequeoX = (rec1.getX() - rec1.getAncho()/2 < rec2.getX() + ( rec2.getAncho()/2) + 100 ) 
+					&& 	   (rec1.getX() + rec1.getAncho()/2 > rec2.getX() - ( rec2.getAncho()/2) + 100 ) ; 
+		
+		return chequeoY && chequeoX;
+		}
+			
+		else return false;
+	}
+
 	
 	
 	public boolean chocan(Rasengan rec1, Ninja rec2) {
