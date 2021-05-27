@@ -78,7 +78,7 @@ public class Juego extends InterfaceJuego {
 
 	private String resultadoJuego = "Ganaste !!";
 
-	private int puntajeMaximo = 50;
+	private int puntajeMaximo = 30;
 
 	private boolean inicio = true;
 
