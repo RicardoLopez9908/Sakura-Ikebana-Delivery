@@ -4,15 +4,12 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import entorno.Entorno;
 import entorno.Herramientas;
@@ -313,7 +310,7 @@ public class Juego extends InterfaceJuego {
 			sakura = new Sakura(270, 400);
 			this.multijugador = false;
 			this.inicio = false;
-			ReproducirSonido("src/Sonidos/MusicaDeFondo.wav");
+			ReproducirSonido("src/sonidos/MusicaDeFondo.wav");
 			
 			
 		} else if (this.entorno.estaPresionada('2')) {
@@ -321,7 +318,7 @@ public class Juego extends InterfaceJuego {
 			amigoDeSakura = new AmigoDeSakura(320, 400);
 			this.multijugador = true;
 			this.inicio = false;
-			ReproducirSonido("src/Sonidos/MusicaDeCombate.wav");
+			ReproducirSonido("src/sonidos/MusicaDeCombate.wav");
 		}
 
 	}
@@ -921,7 +918,7 @@ public class Juego extends InterfaceJuego {
 	        Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
 	        clip.start();
-	       } catch(UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+	       } catch(Exception ex) {
 	         System.out.println("Error al reproducir el sonido.");
 	       }
 	   }
