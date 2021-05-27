@@ -58,8 +58,6 @@ public class Juego extends InterfaceJuego {
 	
 	private Image fondoFinalG = Herramientas.cargarImagen("imagenes/FondoFinalG.png");
 	
-	private int ultimoNinjaEliminado;
-
 	private PuntoDeEntrega puntoDeEntrega;
 
 	private int numeroDeEntrega = 0;
@@ -78,11 +76,13 @@ public class Juego extends InterfaceJuego {
 
 	private String resultadoJuego = "Ganaste !!";
 
-	private int puntajeMaximo = 30;
+	private int puntajeMaximo = 15;
 
 	private boolean inicio = true;
 
 	private boolean multijugador;
+	
+	private PowerUp powerUp = null;
 
 	Juego() {
 		// Inicializa el objeto entorno
@@ -131,6 +131,11 @@ public class Juego extends InterfaceJuego {
 			}
 
 			this.floreria.dibujar(entorno);
+			
+			if(powerUp!=null) {
+				powerUp.dibujar(entorno);
+			}
+			
 			imprimirEstadisticas();
 			puntoDeEntrega = new PuntoDeEntrega(numeroDeEntrega);
 			this.puntoDeEntrega.dibujar(entorno);
@@ -142,7 +147,7 @@ public class Juego extends InterfaceJuego {
 
 
 			revisarProximoMovimientoDelUsuario();
-
+			
 			if (sakura.tieneRamo()) {
 				if (chocan(sakura, puntoDeEntrega.getPunto())) {
 					sakura.entregarRamo();
@@ -164,7 +169,17 @@ public class Juego extends InterfaceJuego {
 				rasenganUsuario1.dibujar(entorno);
 				revisarRasengan();
 			}
+			
+			if(velocidadRasengan<=2 && chocan(sakura, powerUp)) {
+				velocidadRasengan+=2;
+				powerUp=null;
+			}
+			
 		}
+		
+		
+		
+		
 			// Dibujamos todos los ninjas
 			if (ninjas.size() != 0) {
 				for (int i = 0; i < ninjas.size(); i++) {
@@ -176,7 +191,6 @@ public class Juego extends InterfaceJuego {
 						resultadoJuego = "¡¡Perdiste!!";
 					}
 					if (chocan(rasenganUsuario1, ninjas.get(i))) {
-						ultimoNinjaEliminado = i + 1;
 						ninjas.remove(i);
 						rasenganUsuario1 = null;
 						this.cantidadDeNinjasEliminados1++;
@@ -186,7 +200,6 @@ public class Juego extends InterfaceJuego {
 						resultadoJuego = "¡¡Perdiste!!";
 					}
 					if (chocan(rasenganUsuario2, ninjas.get(i))) {
-						ultimoNinjaEliminado = i + 1;
 						ninjas.remove(i);
 						rasenganUsuario2 = null;
 						this.cantidadDeNinjasEliminados2++;
@@ -223,6 +236,11 @@ public class Juego extends InterfaceJuego {
 						rasenganUsuario2.dibujar(entorno);
 						revisarRasengan2();
 					}
+					
+					if(velocidadRasengan2<=2 && chocan(amigoDeSakura, powerUp)) {
+						velocidadRasengan2+=2;
+						powerUp=null;
+					}
 
 				}
 
@@ -245,7 +263,13 @@ public class Juego extends InterfaceJuego {
 				gameOver=true;
 			}
 			
+			if(puntajeUsuario1+puntajeUsuario2>=10 && (velocidadRasengan<=2 || velocidadRasengan<=2) && powerUp == null) {
+				Random r = new Random();
+				powerUp = new PowerUp(r.nextInt(5));			// Entre 0 y 5
+			}
+			
 		}
+		
 	}
 
 	// ------------------------------------[METODOS]------------------------------------------//
@@ -413,7 +437,6 @@ public class Juego extends InterfaceJuego {
 			if (this.entorno.estaPresionada(disparo) && rasenganUsuario1 == null) {
 				rasenganUsuario1 = new Rasengan(this.sakura.getY(), this.sakura.getX(), imagenRasengan1);
 
-				System.out.println("x:" + sakura.getX() + "y: " + sakura.getY());
 				this.movimientoRasengan = "derecha";
 			}
 		}
@@ -585,44 +608,7 @@ public class Juego extends InterfaceJuego {
 		} else
 			rasenganUsuario2 = null;
 	}
-
-	public boolean chocaConManzanas(Rasengan rasengan) {
-		boolean resultado = false;
-		for (Manzana manzana : this.manzanas) {
-			if (chocan(rasengan, manzana)) {
-				resultado = true;
-			}
-		}
-		return resultado;
-	}
-
-	/**
-	 * Generamos un ninja aleatorio, verificando que no se encuentre dentro de la
-	 * lista manzanas. Una vez creado nuestro ninja, lo añadimos a nuestra lista
-	 * ninjas.
-	 *
-	 */
-
-	/**
-	 * Este metodo verifica que la distancia entre Ninjas es mayor a 20
-	 * 
-	 * @param nuevoNinja: este sera el ninja que comparemos con nuestra lista
-	 *                    "ninjas"
-	 * @return true en caso de que la distancia sea correcta / false en caso de que
-	 *         la distancia no lo sea.
-	 */
-
-	/*
-	 * public boolean distanciaDeNijasEsCorrecta(Ninja nuevoNinja) {
-	 * if(ninjas.size()!=0) { for(Ninja antiguoNinja: ninjas ) {
-	 * if(((antiguoNinja.getX()-nuevoNinja.getX()<30) &&
-	 * (antiguoNinja.getX()-nuevoNinja.getX()>-30))
-	 * ||((antiguoNinja.getY()-nuevoNinja.getY()<30)) &&
-	 * (antiguoNinja.getY()-nuevoNinja.getY()>-30)) { return false; } } return true;
-	 * } else return true; }
-	 * 
-	 */
-
+	
 	/**
 	 * Añadimos manzanas a nuestra lista "manzanas" para generar un mapa.
 	 * 
@@ -658,6 +644,56 @@ public class Juego extends InterfaceJuego {
 		manzanas.add(nueva);
 	}
 
+
+	
+
+	public boolean estaCerca(Ninja rec1, Sakura rec2) {
+
+		if (rec1 != null && rec2 != null) {
+			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + (rec2.getAlto() / 2) + 100)
+					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - (rec2.getAlto() / 2) + 100);
+
+			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + (rec2.getAncho() / 2) + 100)
+					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - (rec2.getAncho() / 2) + 100);
+
+			return chequeoY && chequeoX;
+		}
+
+		else
+			return false;
+	}
+
+	public boolean estaCerca(Ninja rec1, AmigoDeSakura rec2) {
+
+		if (rec1 != null && rec2 != null) {
+			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + (rec2.getAlto() / 2) + 100)
+					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - (rec2.getAlto() / 2) + 100);
+
+			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + (rec2.getAncho() / 2) + 100)
+					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - (rec2.getAncho() / 2) + 100);
+
+			return chequeoY && chequeoX;
+		}
+
+		else
+			return false;
+	}
+
+
+	
+	
+	public boolean chocaConManzanas(Rasengan rasengan) {
+		boolean resultado = false;
+		for (Manzana manzana : this.manzanas) {
+			if (chocan(rasengan, manzana)) {
+				resultado = true;
+			}
+		}
+		return resultado;
+	}
+
+
+
 	/**
 	 * Revisamos si chocan los argumentos que le pasemos
 	 * 
@@ -665,7 +701,6 @@ public class Juego extends InterfaceJuego {
 	 * @param rec2 : Manzana
 	 * @return : true en caso de choque / false en caso de no chocar
 	 */
-
 	public boolean chocan(Ninja rec1, Manzana rec2) {
 
 		if (rec1 != null && rec2 != null) {
@@ -738,38 +773,7 @@ public class Juego extends InterfaceJuego {
 			return false;
 	}
 
-	public boolean estaCerca(Ninja rec1, Sakura rec2) {
-
-		if (rec1 != null && rec2 != null) {
-			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + (rec2.getAlto() / 2) + 100)
-					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - (rec2.getAlto() / 2) + 100);
-
-			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + (rec2.getAncho() / 2) + 100)
-					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - (rec2.getAncho() / 2) + 100);
-
-			return chequeoY && chequeoX;
-		}
-
-		else
-			return false;
-	}
-
-	public boolean estaCerca(Ninja rec1, AmigoDeSakura rec2) {
-
-		if (rec1 != null && rec2 != null) {
-			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + (rec2.getAlto() / 2) + 100)
-					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - (rec2.getAlto() / 2) + 100);
-
-			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + (rec2.getAncho() / 2) + 100)
-					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - (rec2.getAncho() / 2) + 100);
-
-			return chequeoY && chequeoX;
-		}
-
-		else
-			return false;
-	}
-
+	
 	public boolean chocan(Rasengan rec1, Ninja rec2) {
 
 		if (rec1 != null && rec2 != null) {
@@ -786,6 +790,39 @@ public class Juego extends InterfaceJuego {
 			return false;
 	}
 
+	public boolean chocan(Sakura rec1, PowerUp rec2) {
+
+		if (rec1 != null && rec2 != null) {
+			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + rec2.getAlto() / 2)
+					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - rec2.getAlto() / 2);
+
+			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + rec2.getAncho() / 2)
+					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - rec2.getAncho() / 2);
+
+			return chequeoY && chequeoX;
+		}
+
+		else
+			return false;
+	}
+	
+	public boolean chocan(AmigoDeSakura rec1, PowerUp rec2) {
+
+		if (rec1 != null && rec2 != null) {
+			boolean chequeoY = (rec1.getY() - rec1.getAlto() / 2 < rec2.getY() + rec2.getAlto() / 2)
+					&& (rec1.getY() + rec1.getAlto() / 2 > rec2.getY() - rec2.getAlto() / 2);
+
+			boolean chequeoX = (rec1.getX() - rec1.getAncho() / 2 < rec2.getX() + rec2.getAncho() / 2)
+					&& (rec1.getX() + rec1.getAncho() / 2 > rec2.getX() - rec2.getAncho() / 2);
+
+			return chequeoY && chequeoX;
+		}
+
+		else
+			return false;
+	}
+	
+	
 	public boolean chocan(Sakura rec1, Ninja rec2) {
 
 		if (rec1 != null && rec2 != null) {
