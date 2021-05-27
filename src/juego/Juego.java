@@ -51,7 +51,13 @@ public class Juego extends InterfaceJuego {
 	private boolean gameOver = false;
 
 	private Image fondo = Herramientas.cargarImagen("imagenes/Fondo.png");
+	
+	private Image fondoMenu = Herramientas.cargarImagen("imagenes/FondoMenu.png");
 
+	private Image fondoFinalP = Herramientas.cargarImagen("imagenes/FondoFinalP.png");
+	
+	private Image fondoFinalG = Herramientas.cargarImagen("imagenes/FondoFinalG.png");
+	
 	private int ultimoNinjaEliminado;
 
 	private PuntoDeEntrega puntoDeEntrega;
@@ -72,7 +78,7 @@ public class Juego extends InterfaceJuego {
 
 	private String resultadoJuego = "Ganaste !!";
 
-	private int puntajeMaximo = 5;
+	private int puntajeMaximo = 50;
 
 	private boolean inicio = true;
 
@@ -102,6 +108,7 @@ public class Juego extends InterfaceJuego {
 		// Procesamiento de un instante de tiempo
 
 		if (inicio == true) {
+			
 			imprimirPantallaInicio();
 		}
 
@@ -109,6 +116,7 @@ public class Juego extends InterfaceJuego {
 			imprimirPantallaFinal();
 		} else {
 			if ((puntajeUsuario1 >= puntajeMaximo) || (puntajeUsuario2 >= puntajeMaximo)) {
+				
 				resultadoJuego = "¡¡Ganaste!!";
 
 				gameOver = true;
@@ -243,17 +251,34 @@ public class Juego extends InterfaceJuego {
 	// ------------------------------------[METODOS]------------------------------------------//
 
 	public void imprimirPantallaInicio() {
+		
+		entorno.dibujarImagen(fondoMenu, 400, 300, 0);
+		//Sombra Titulo:
+		entorno.cambiarFont("Times New Roman", 50, Color.BLACK);
+		entorno.escribirTexto("Bienvenido a Sakura Ikebana Delivery", 17, 197);
+		
+		//Titulo
 		entorno.cambiarFont("Times New Roman", 50, Color.WHITE);
 		entorno.escribirTexto("Bienvenido a Sakura Ikebana Delivery", 20, 200);
 
+		//Sombra Menu
+		entorno.cambiarFont("Arial", 30, Color.BLACK);
+		entorno.escribirTexto("Para un jugador, presione el 1", 147, 497);
+		entorno.escribirTexto("Para dos jugadores, presione el 2", 148, 547);
+		
+		//Menu
 		entorno.cambiarFont("Arial", 30, Color.WHITE);
-		entorno.escribirTexto("Para un solo jugador, presione el 1", 150, 350);
-		entorno.escribirTexto("Para dos jugadores, presione el 2", 150, 400);
+		entorno.escribirTexto("Para un jugador, presione el 1", 150, 500);
+		entorno.escribirTexto("Para dos jugadores, presione el 2", 150, 550);
+		
 
 		if (this.entorno.estaPresionada('1')) {
 			sakura = new Sakura(270, 400);
 			this.multijugador = false;
 			this.inicio = false;
+			
+			
+			
 		} else if (this.entorno.estaPresionada('2')) {
 			sakura = new Sakura(270, 400);
 			amigoDeSakura = new AmigoDeSakura(320, 400);
@@ -264,44 +289,93 @@ public class Juego extends InterfaceJuego {
 	}
 
 	public void imprimirPantallaFinal() {
-
+		
+		
+		
 		if (this.resultadoJuego.equals("¡¡Ganaste!!")) {
+			
+			entorno.dibujarImagen(fondoFinalG, 400, 300, 0);
+			
+			//Resultado
 			entorno.cambiarFont("Times New Roman", 50, Color.GREEN);
-		} else
-			entorno.cambiarFont("Times New Roman", 50, Color.RED);
-
-		entorno.escribirTexto(resultadoJuego, 290, 250);
+			entorno.escribirTexto(resultadoJuego, 250, 250);
+		} else{
+			entorno.dibujarImagen(fondoFinalP, 400, 300, 0);
+			//Sombra Resultado
+			entorno.cambiarFont("Arial", 50, Color.BLACK);
+			entorno.escribirTexto(resultadoJuego, 247, 247);
+			//Resultado
+			entorno.cambiarFont("Arial", 50, Color.RED);
+			entorno.escribirTexto(resultadoJuego, 250, 250);
+		}
+		
 		entorno.cambiarFont("Times New Roman", 30, Color.white);
-		entorno.escribirTexto("Puntaje del Juego: " + (puntajeUsuario1 + puntajeUsuario1), 290, 310);
-		entorno.escribirTexto("Kills: " + (cantidadDeNinjasEliminados1 + cantidadDeNinjasEliminados2), 290, 350);
+		entorno.escribirTexto("Puntaje Jugador 1: " + puntajeUsuario1 , 250, 310);
+		entorno.escribirTexto("Kills jugador 1: " + cantidadDeNinjasEliminados1, 250, 350);
+		entorno.escribirTexto("Puntaje Jugador 2: " + puntajeUsuario2, 250, 390);
+		entorno.escribirTexto("Kills jugador 2: " + cantidadDeNinjasEliminados2, 250, 430);
 	}
 
 	public void imprimirEstadisticas() {
-
-		// sombras:
-		entorno.cambiarFont("Arial", 30, Color.BLACK);
-		entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 12, 37);
-		entorno.cambiarFont("Arial", 30, Color.BLACK);
-		entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 627, 37);
-
-		// estadisticas;
-		entorno.cambiarFont("Arial", 30, Color.WHITE);
-		entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 15, 40);
-		entorno.cambiarFont("Arial", 30, Color.WHITE);
-		entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 630, 40);
-
-		if (multijugador == true) {
+		
+		if(sakura !=null) {
 			// sombras:
 			entorno.cambiarFont("Arial", 30, Color.BLACK);
-			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 12, 567);
+			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 12, 37);
 			entorno.cambiarFont("Arial", 30, Color.BLACK);
-			entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 627, 567);
-
+			entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 627, 37);
+			
+	
 			// estadisticas;
 			entorno.cambiarFont("Arial", 30, Color.WHITE);
-			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 15, 570);
+			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 15, 40);
 			entorno.cambiarFont("Arial", 30, Color.WHITE);
-			entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 630, 570);
+			entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 630, 40);
+		}
+		else {
+			// sombras:
+			entorno.cambiarFont("Arial", 30, Color.BLACK);
+			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 12, 37);
+			entorno.cambiarFont("Arial", 30, Color.BLACK);
+			entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 627, 37);
+			
+
+			// estadisticas;
+			entorno.cambiarFont("Arial", 30, Color.RED);
+			entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados1, 15, 40);
+			entorno.cambiarFont("Arial", 30, Color.RED);
+			entorno.escribirTexto("Puntaje: " + puntajeUsuario1, 630, 40);
+		}
+
+		if (multijugador == true) {
+			
+			if(amigoDeSakura != null) {
+			
+				// sombras:
+				entorno.cambiarFont("Arial", 30, Color.BLACK);
+				entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 12, 567);
+				entorno.cambiarFont("Arial", 30, Color.BLACK);
+				entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 627, 567);
+	
+				// estadisticas;
+				entorno.cambiarFont("Arial", 30, Color.WHITE);
+				entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 15, 570);
+				entorno.cambiarFont("Arial", 30, Color.WHITE);
+				entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 630, 570);
+			}
+			else {
+				// sombras:
+				entorno.cambiarFont("Arial", 30, Color.BLACK);
+				entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 12, 567);
+				entorno.cambiarFont("Arial", 30, Color.BLACK);
+				entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 627, 567);
+	
+				// estadisticas;
+				entorno.cambiarFont("Arial", 30, Color.RED);
+				entorno.escribirTexto("Kills: " + cantidadDeNinjasEliminados2, 15, 570);
+				entorno.cambiarFont("Arial", 30, Color.RED);
+				entorno.escribirTexto("Puntaje: " + puntajeUsuario2, 630, 570);
+			}
 
 		}
 

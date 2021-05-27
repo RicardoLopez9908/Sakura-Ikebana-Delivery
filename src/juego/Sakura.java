@@ -18,8 +18,8 @@ public class Sakura {
 	
 
 	public Sakura(double y, double x) {
-		this.alto=43;
-		this.ancho=30;
+		this.alto=40;
+		this.ancho=27;
 		this.x=x;
 		this.y=y;
 		this.velocidad=1;
