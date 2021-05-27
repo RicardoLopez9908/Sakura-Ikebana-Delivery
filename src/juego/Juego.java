@@ -347,8 +347,11 @@ public class Juego extends InterfaceJuego {
 		entorno.cambiarFont("Times New Roman", 30, Color.white);
 		entorno.escribirTexto("Puntaje Jugador 1: " + puntajeUsuario1 , 250, 310);
 		entorno.escribirTexto("Kills jugador 1: " + cantidadDeNinjasEliminados1, 250, 350);
-		entorno.escribirTexto("Puntaje Jugador 2: " + puntajeUsuario2, 250, 390);
-		entorno.escribirTexto("Kills jugador 2: " + cantidadDeNinjasEliminados2, 250, 430);
+		
+		if (multijugador == true) {
+			entorno.escribirTexto("Puntaje Jugador 2: " + puntajeUsuario2, 250, 390);
+			entorno.escribirTexto("Kills jugador 2: " + cantidadDeNinjasEliminados2, 250, 430);
+		}
 	}
 
 	public void imprimirEstadisticas() {
@@ -918,6 +921,7 @@ public class Juego extends InterfaceJuego {
 	        Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
 	        clip.start();
+	        clip.loop(100000);
 	       } catch(Exception ex) {
 	         System.out.println("Error al reproducir el sonido.");
 	       }
