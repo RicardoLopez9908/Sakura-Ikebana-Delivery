@@ -186,6 +186,7 @@ public class Juego extends InterfaceJuego {
 					ninjas.get(i).dibujar(entorno);
 					ninjas.get(i).mover();
 					revisarMovimiento(ninjas.get(i));
+					try {
 					if (chocan(sakura, ninjas.get(i))) {
 						sakura = null;
 						resultadoJuego = "¡¡Perdiste!!";
@@ -204,6 +205,8 @@ public class Juego extends InterfaceJuego {
 						rasenganUsuario2 = null;
 						this.cantidadDeNinjasEliminados2++;
 					}
+					}
+					catch(IndexOutOfBoundsException ignorar){}
 
 				}
 
