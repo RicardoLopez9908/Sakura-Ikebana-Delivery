@@ -10,7 +10,17 @@ El objetivo de este videojuego es que Sakura entregue los pedidos sin perder la 
 
 
 ## Funciones del juego:
-- Opcion multijugador disponible (1 o 2 jugadores).
--
+
+- Sonido incorporado. (NARUTO) :sound:
+- Opcion multijugador a eleccion del usuario. (1 o 2 usuarios al mismo tiempo) :beers:
+- Contador de puntos individual por partida. :floppy_disk:
+- PowerUp incorporado para mejorar velocidad del Rasengan :cyclone:
+- Aparicion de enemigos infinitos (gracias al manejo de listas). :boom:
+- Floreria donde obtener flores para entregar :sunflower:
+- Direccionamiento aleatorio de casas para visitar :houses:
+- Posibilidad de ganar el juego al llegar a puntuación maxima :wink:
+
+  `private int puntajeMaximo = 15; // o el puntaje que querramos`
+
 
 
