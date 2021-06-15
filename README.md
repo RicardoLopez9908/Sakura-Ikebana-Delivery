@@ -8,7 +8,7 @@ ninjas enemigos. Esto complica el trabajo de Sakura que debe entregar los pedido
 y combatiendo a los ninjas enemigos.
 El objetivo de este videojuego es que Sakura entregue los pedidos sin perder la vida a manos de los ninjas enemigos.__
 
-![img](https://github.com/RicardoLopez9908/Sakura-Ikebana-Delivery/blob/master/Presentacion%20Sakura.png)
+![img](https://github.com/RicardoLopez9908/Sakura-Ikebana-Delivery/blob/master/Presentacion%20Sakura.jpg)
 
 ## Funciones del juego:
 
